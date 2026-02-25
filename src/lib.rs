@@ -3,6 +3,7 @@
 //! Command-line interface for FemtoClaw Industrial Agent Runtime.
 
 pub mod commands;
+pub mod repl;
 
 use clap::Parser;
 use tracing::Level;
@@ -37,7 +38,7 @@ pub async fn run() -> anyhow::Result<()> {
     match args.command {
         Some(cmd) => commands::execute(cmd).await?,
         None => {
-            tracing::info!("Starting FemtoClaw runtime...");
+            repl::run_repl(&args.brain).await?;
         }
     }
 
