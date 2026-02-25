@@ -5,6 +5,7 @@
 pub mod commands;
 
 use clap::Parser;
+use tracing::Level;
 
 #[derive(Parser, Debug)]
 #[command(name = "femtoclaw")]
@@ -26,8 +27,11 @@ pub struct Args {
 pub async fn run() -> anyhow::Result<()> {
     let args = Args::parse();
 
+    let level: Level = args.log_level.parse()
+        .unwrap_or_else(|_| Level::INFO);
+    
     tracing_subscriber::fmt()
-        .with_max_level(args.log_level.parse()?)
+        .with_max_level(level)
         .init();
 
     match args.command {
