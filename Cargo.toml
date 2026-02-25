@@ -1,0 +1,30 @@
+[package]
+name = "femtoclaw-cli"
+version = "1.0.0"
+edition = "2021"
+license = "Apache-2.0"
+description = "FemtoClaw Command-Line Interface"
+repository = "https://github.com/femtoclaw/femtoclaw-cli.git"
+
+[[bin]]
+name = "femtoclaw"
+path = "src/main.rs"
+
+[dependencies]
+femtoclaw = { path = "../femtoclaw" }
+femtoclaw-protocol = { path = "../femtoclaw-protocol" }
+femtoclaw-policy = { path = "../femtoclaw-policy" }
+femtoclaw-audit = { path = "../femtoclaw-audit" }
+femtoclaw-storage = { path = "../femtoclaw-storage" }
+anyhow = "1"
+clap = { version = "4", features = ["derive"] }
+tokio = { version = "1", features = ["rt-multi-thread", "macros", "signal"] }
+tracing = "0.1"
+tracing-subscriber = { version = "0.3", features = ["fmt", "ansi"] }
+
+[profile.release]
+lto = true
+codegen-units = 1
+panic = "abort"
+strip = true
+opt-level = "z"
