@@ -11,11 +11,7 @@ name = "femtoclaw"
 path = "src/main.rs"
 
 [dependencies]
-femtoclaw = { path = "../femtoclaw" }
-femtoclaw-protocol = { path = "../femtoclaw-protocol" }
-femtoclaw-policy = { path = "../femtoclaw-policy" }
-femtoclaw-audit = { path = "../femtoclaw-audit" }
-femtoclaw-storage = { path = "../femtoclaw-storage" }
+femtoclaw = { path = "../femtoclaw", version = "1.0" }
 anyhow = "1"
 clap = { version = "4", features = ["derive"] }
 tokio = { version = "1", features = ["rt-multi-thread", "macros", "signal"] }
