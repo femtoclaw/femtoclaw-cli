@@ -1,12 +1,13 @@
 //! Interactive REPL for FemtoClaw.
 
 use std::io::{self, Write};
+use femtoclaw::{Agent, Config};
 
-pub async fn run_repl(brain: &str) -> anyhow::Result<()> {
+pub async fn run_repl(_brain: &str) -> anyhow::Result<()> {
     println!("FemtoClaw Industrial Agent Runtime");
-    println!("Brain: {}", brain);
     println!("Type /help for commands, /quit to exit.\n");
 
+    let agent = Agent::new(Config::default())?;
     let mut history: Vec<String> = Vec::new();
 
     loop {
@@ -25,10 +26,11 @@ pub async fn run_repl(brain: &str) -> anyhow::Result<()> {
             "/quit" | "/exit" => break,
             "/help" => {
                 println!("Commands:");
-                println!("  /help   - Show this help");
-                println!("  /quit   - Exit the REPL");
-                println!("  /clear  - Clear history");
-                println!("  /history - Show command history");
+                println!("  /help     - Show this help");
+                println!("  /quit     - Exit the REPL");
+                println!("  /clear    - Clear history");
+                println!("  /history  - Show command history");
+                println!("  /reset    - Reset agent memory");
                 continue;
             }
             "/clear" => {
@@ -41,23 +43,26 @@ pub async fn run_repl(brain: &str) -> anyhow::Result<()> {
                 }
                 continue;
             }
+            "/reset" => {
+                agent.reset().await;
+                println!("Agent memory reset.");
+                continue;
+            }
             _ => {}
         }
 
         history.push(input.to_string());
 
-        let response = process_input(input, brain).await;
-        println!("{}", response);
+        match agent.run(input).await {
+            Ok(response) => {
+                println!("{}", response);
+            }
+            Err(e) => {
+                println!("Error: {}", e);
+            }
+        }
     }
 
     println!("Goodbye!");
     Ok(())
-}
-
-async fn process_input(input: &str, _brain: &str) -> String {
-    if input.starts_with('/') {
-        return format!("Unknown command: {}", input);
-    }
-
-    format!("Processing: {}...", input)
 }
