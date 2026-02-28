@@ -16,7 +16,7 @@ This is the primary entry point for local development and testing of FemtoClaw a
 
 - **Interactive REPL**: Chat with the agent interactively
 - **Configuration Management**: Flexible runtime configuration
-- **Brain Selection**: Choose between different brain backends (echo, openai)
+- **Brain Selection**: Choose between different brain backends (echo, openai, openrouter)
 - **Logging Control**: Configurable log levels
 - **Command Support**: Run, init, status commands
 
@@ -40,7 +40,7 @@ femtoclaw
 femtoclaw --brain openai
 
 # With config file
-femtoclawetc/femtoc --config /law.toml
+femtoclaw --config /etc/femtoclaw.toml
 
 # With debug logging
 femtoclaw --log-level debug
@@ -54,6 +54,53 @@ femtoclaw status
 # Initialize new configuration
 femtoclaw init
 ```
+
+## Windows How-To: Open Notepad With A Random Haiku (OpenRouter)
+
+Use this flow on Windows PowerShell to have FemtoClaw generate a tool call that writes a random haiku to a temp file and opens it in Notepad.
+
+### 1. Build the CLI
+
+```powershell
+cd d:\code\femtoclaw\femtoclaw-cli
+cargo build --release
+```
+
+### 2. Set OpenRouter environment variables
+
+```powershell
+$env:FEMTO_OPENROUTER_API_KEY = "YOUR_OPENROUTER_API_KEY"
+$env:FEMTO_OPENROUTER_MODEL = "openai/gpt-4.1-mini"
+$env:FEMTO_OPENROUTER_TIMEOUT_SECS = "120"
+```
+
+Notes:
+- `openai/gpt-4.1-mini` via OpenRouter is recommended for reliable JSON tool-call output.
+- `openrouter/free` may work but can be less consistent with strict tool format.
+
+### 3. Set a strict prompt
+
+```powershell
+$prompt = 'Return ONLY tool_call JSON. The tool name MUST be exactly "shell". Use bin "powershell" and argv to: create 3 full haikus, pick one randomly, save it to Join-Path $env:TEMP ''femtoclaw_haiku.txt'', open notepad for that file, and output the selected haiku text.'
+```
+
+### 4. Run with safe PowerShell argument passing
+
+```powershell
+& ".\target\release\femtoclaw.exe" @('--brain','openrouter','run','--prompt',$prompt)
+```
+
+### 5. Verify output file
+
+```powershell
+Get-Content "$env:TEMP\femtoclaw_haiku.txt"
+```
+
+Troubleshooting:
+- `unexpected argument ...`: use the array invocation form shown above (`@(...)`) so PowerShell does not split your prompt.
+- `Capability denied: DENIED_CAPABILITY_NOT_FOUND`: ensure prompt says tool name must be exactly `shell`.
+- `shell bin not allowed`: rebuild after updating allowlist in `femtoclaw/src/tools/shell.rs`.
+- `arg too long`: update to latest code where shell arg length limit is increased.
 
 ## Configuration
 
@@ -72,10 +119,13 @@ path = "/var/lib/femtoclaw"
 
 ## Environment Variables
 
-- `FEMTO_BRAIN` — Brain backend (echo, openai)
-- `FEMTO_OPENAI_API_KEY` — OpenAI API key
-- `FEMTO_OPENAI_BASE_URL` — OpenAI-compatible API endpoint
-- `FEMTO_OPENAI_MODEL` — Model name (default: gpt-4.1-mini)
+- `FEMTO_BRAIN` - Brain backend (for example: echo, openai, openrouter)
+- `FEMTO_OPENAI_API_KEY` - OpenAI API key
+- `FEMTO_OPENAI_BASE_URL` - OpenAI-compatible API endpoint
+- `FEMTO_OPENAI_MODEL` - OpenAI model name (default: gpt-4.1-mini)
+- `FEMTO_OPENROUTER_API_KEY` - OpenRouter API key
+- `FEMTO_OPENROUTER_MODEL` - OpenRouter model (for example: openai/gpt-4.1-mini)
+- `FEMTO_OPENROUTER_TIMEOUT_SECS` - OpenRouter timeout in seconds (default: 180)
 
 ## Architecture
 
