@@ -76,6 +76,7 @@ $env:FEMTO_OPENROUTER_TIMEOUT_SECS = "120"
 
 Notes:
 - `openai/gpt-4.1-mini` via OpenRouter is recommended for reliable JSON tool-call output.
+- `arcee-ai/trinity-large-preview:free` is another available option
 - `openrouter/free` may work but can be less consistent with strict tool format.
 
 ### 3. Set a strict prompt
