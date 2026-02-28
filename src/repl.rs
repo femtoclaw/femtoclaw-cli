@@ -1,13 +1,20 @@
 //! Interactive REPL for FemtoClaw.
 
 use std::io::{self, Write};
+
 use femtoclaw::{Agent, Config};
 
-pub async fn run_repl(_brain: &str) -> anyhow::Result<()> {
+fn config_for_brain(brain: &str) -> Config {
+    let mut config = Config::default();
+    config.brain.backend = brain.to_string();
+    config
+}
+
+pub async fn run_repl(brain: &str) -> anyhow::Result<()> {
     println!("FemtoClaw Industrial Agent Runtime");
     println!("Type /help for commands, /quit to exit.\n");
 
-    let agent = Agent::new(Config::default())?;
+    let agent = Agent::new(config_for_brain(brain))?;
     let mut history: Vec<String> = Vec::new();
 
     loop {
@@ -64,5 +71,12 @@ pub async fn run_repl(_brain: &str) -> anyhow::Result<()> {
     }
 
     println!("Goodbye!");
+    Ok(())
+}
+
+pub async fn run_once(brain: &str, prompt: &str) -> anyhow::Result<()> {
+    let agent = Agent::new(config_for_brain(brain))?;
+    let response = agent.run(prompt).await?;
+    println!("{}", response);
     Ok(())
 }

@@ -28,15 +28,12 @@ pub struct Args {
 pub async fn run() -> anyhow::Result<()> {
     let args = Args::parse();
 
-    let level: Level = args.log_level.parse()
-        .unwrap_or_else(|_| Level::INFO);
-    
-    tracing_subscriber::fmt()
-        .with_max_level(level)
-        .init();
+    let level: Level = args.log_level.parse().unwrap_or(Level::INFO);
+
+    tracing_subscriber::fmt().with_max_level(level).init();
 
     match args.command {
-        Some(cmd) => commands::execute(cmd).await?,
+        Some(cmd) => commands::execute(cmd, &args.brain).await?,
         None => {
             repl::run_repl(&args.brain).await?;
         }

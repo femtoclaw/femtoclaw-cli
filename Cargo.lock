@@ -243,7 +243,7 @@ dependencies = [
 
 [[package]]
 name = "femtoclaw"
-version = "1.0.2"
+version = "1.0.3"
 dependencies = [
  "anyhow",
  "async-trait",
@@ -261,7 +261,7 @@ dependencies = [
 
 [[package]]
 name = "femtoclaw-audit"
-version = "1.0.2"
+version = "1.0.3"
 dependencies = [
  "anyhow",
  "chrono",
@@ -275,7 +275,7 @@ dependencies = [
 
 [[package]]
 name = "femtoclaw-cli"
-version = "1.0.2"
+version = "1.0.3"
 dependencies = [
  "anyhow",
  "clap",
@@ -287,7 +287,7 @@ dependencies = [
 
 [[package]]
 name = "femtoclaw-policy"
-version = "1.0.2"
+version = "1.0.3"
 dependencies = [
  "anyhow",
  "serde",
@@ -297,7 +297,7 @@ dependencies = [
 
 [[package]]
 name = "femtoclaw-protocol"
-version = "1.0.2"
+version = "1.0.3"
 dependencies = [
  "anyhow",
  "serde",
@@ -307,7 +307,7 @@ dependencies = [
 
 [[package]]
 name = "femtoclaw-storage"
-version = "1.0.2"
+version = "1.0.3"
 dependencies = [
  "anyhow",
  "chrono",

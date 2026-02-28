@@ -4,7 +4,10 @@ use clap::Subcommand;
 
 #[derive(Subcommand, Debug)]
 pub enum Command {
-    Run,
+    Run {
+        #[arg(long)]
+        prompt: Option<String>,
+    },
     Init {
         #[arg(long)]
         path: Option<String>,
@@ -13,11 +16,15 @@ pub enum Command {
     Version,
 }
 
-pub async fn execute(cmd: Command) -> anyhow::Result<()> {
+pub async fn execute(cmd: Command, brain: &str) -> anyhow::Result<()> {
     match cmd {
-        Command::Run => {
-            tracing::info!("Running FemtoClaw...");
-            super::repl::run_repl("echo").await?;
+        Command::Run { prompt } => {
+            tracing::info!(brain, "Running FemtoClaw");
+            if let Some(prompt) = prompt {
+                super::repl::run_once(brain, &prompt).await?;
+            } else {
+                super::repl::run_repl(brain).await?;
+            }
         }
         Command::Init { path } => {
             let config_path = path.unwrap_or_else(|| "~/.config/femtoclaw/config.json".to_string());
@@ -27,7 +34,8 @@ pub async fn execute(cmd: Command) -> anyhow::Result<()> {
         Command::Status => {
             println!("FemtoClaw Status:");
             println!("  Status: Ready");
-            println!("  Version: 1.0.0");
+            println!("  Version: {}", env!("CARGO_PKG_VERSION"));
+            println!("  Brain: {}", brain);
         }
         Command::Version => {
             println!("femtoclaw {}", env!("CARGO_PKG_VERSION"));
