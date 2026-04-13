@@ -1,51 +1,39 @@
-# FemtoClaw CLI
+# 💻 FemtoClaw CLI
 
 [![Rust](https://img.shields.io/badge/rust-1.75%2B-blue.svg)](https://www.rust-lang.org)
 [![License](https://img.shields.io/badge/License-Apache%202.0-blue.svg)](https://www.apache.org/licenses/LICENSE-2.0)
 [![Status](https://img.shields.io/badge/Status-Stable-green.svg)]()
 
-FemtoClaw Command-Line Interface — interactive tool for the industrial agent runtime.
+The **FemtoClaw CLI** is the primary administrative and development tool for the industrial agent runtime. It provides an interactive REPL for testing autonomous loops and a robust command-line interface for operational tasks.
 
-## Overview
+---
 
-`femtoclaw-cli` is the primary entry point for local development, testing, and operational management of FemtoClaw agents. It provides an interactive REPL and single-shot execution commands.
+## 🚀 Key Features
 
-## Features
+- **Autonomous REPL**: Directly interact with the agent's iterative reasoning loop.
+- **Durable Local History**: Automatically persists execution history to local storage via WAL.
+- **Brain Hot-Swapping**: Switch between brain backends (echo, openai, ollama) with zero reconfiguration.
+- **Governance Tools**: Commands to inspect policies, capabilities, and audit logs.
 
-- **Autonomous REPL**: Chat with the agent and observe multi-step autonomous loops.
-- **Durable History**: Automatically persists execution history to local storage.
-- **Flexible Configuration**: Switch brains, adjust safety limits, and manage policies.
-- **Enterprise-ready CLI**: Built with `clap` for a robust, discoverable interface.
+---
 
-## Installation
+## 🛠️ Usage
 
-```bash
-cargo install femtoclaw-cli
-```
-
-## Usage
-
-### 1. Start the Autonomous REPL
-Enter the interactive loop where the agent can think and execute tools autonomously.
+### 1. Launch the Autonomous REPL
 ```bash
 femtoclaw run
 ```
 
-### 2. Single-shot Execution
-Send a prompt and wait for the final response (the agent will still loop internally if needed).
+### 2. Single-shot Execution (Once)
+Execute a specific instruction and exit after the goal is reached or limits are hit.
 ```bash
-femtoclaw once --prompt "List all files in the current directory and count them."
+femtoclaw once --prompt "Generate a system health report and count running processes."
 ```
 
-### 3. Change Brain Backend
-```bash
-export FEMTO_BRAIN=openai
-femtoclaw run
-```
+---
 
-## Related Crates
-- `femtoclaw`: Core runtime library.
-- `femtoclaw-remote`: Distributed cluster support and API server.
+## 📄 Related Crates
+- **[femtoclaw](../femtoclaw)**: The core runtime engine.
+- **[femtoclaw-remote](../femtoclaw-remote)**: Distributed coordination server.
 
-## License
-Apache 2.0 — see [LICENSE](LICENSE).
+Copyright © 2026 FemtoClaw Project.
